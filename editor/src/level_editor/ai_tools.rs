@@ -7,7 +7,7 @@
 use anyhow::{Result, anyhow, bail};
 use serde_json::{Value, json};
 use tool_registry::ToolContext;
-use ui_level_editor::ai_tools::{command_json, edit_scene, open_scene, require_object};
+use ui_level_editor::ai_tools::{edit_scene, open_scene, require_object};
 use ui_level_editor::commands::{SceneCommand, TypedComponent, execute_command};
 use ui_level_editor::scene_edit::{ObjectType, SceneObjectData, Transform};
 
@@ -235,9 +235,7 @@ pub fn level_editor_edit_spline(
     Ok(out)
 }
 
-inventory::submit! {
-    ui_level_editor::extend::AiToolNamespace {
-        origin: pulsar_plugins::origin!(),
-        namespace: module_path!(),
-    }
-}
+/// The namespace of the tools above: this module's path, under which the
+/// `#[tool]` macro lists them (the root registers it as an
+/// `ui_level_editor::extend::AiToolNamespace`).
+pub const AI_TOOL_NAMESPACE: &str = module_path!();

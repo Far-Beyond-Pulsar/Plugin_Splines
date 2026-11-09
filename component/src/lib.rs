@@ -7,16 +7,12 @@
 //!   the editor calls the same methods scripts do.
 //! - Its editor lines: the engine's viewports draw every visible curve
 //!   through the renderer's editor debug lines ([`SplineLines`], an
-//!   `engine_backend` editor line set). Splines have no Helio feature.
+//!   `engine_backend` editor line set, made by [`new_spline_lines`]).
+//!   Splines have no Helio feature.
 //!
-//! Everything registers through `inventory` once the crate is linked: hosts link it
-//! without naming it (a game built for a project links the runtime modules
-//! of the plugins its `Pulsar.toml` enables, the editor every installed
-//! plugin through `installed_plugins`; `pulsar_plugins`) and know no spline type.
-
-// The plugin's descriptor (`../pulsar-plugin.toml`): linking this crate
-// installs the plugin; a project enables it or not (`pulsar_plugins`).
-pulsar_plugins::installed!("../pulsar-plugin.toml");
+//! This crate registers nothing itself but its type's script methods: the
+//! plugin's root crate (`splines_plugin`) submits the component class and
+//! the editor lines, in one place.
 
 pub mod component;
 
@@ -28,18 +24,11 @@ impl engine_backend::subsystems::render::EditorLines for SplineLines {
     }
 }
 
-fn new_spline_lines(
+/// The splines' editor line set over `world`.
+pub fn new_spline_lines(
     world: &pulsar_scenedb::World,
 ) -> Box<dyn engine_backend::subsystems::render::EditorLines> {
     Box::new(SplineLines::new(world))
-}
-
-inventory::submit! {
-    engine_backend::subsystems::render::EditorLinesRegistration {
-        origin: pulsar_plugins::origin!(),
-        name: "splines",
-        new: new_spline_lines,
-    }
 }
 
 fn spline(instance: &mut dyn pulsar_reflection::EngineClass) -> Option<&mut SplineComponent> {
@@ -173,14 +162,5 @@ mod tests {
             .unwrap();
         (resample.caller)(&mut spline, vec![Box::new(5i32)]).unwrap();
         assert_eq!(spline.points.len(), 5);
-    }
-
-    #[test]
-    fn registers_its_editor_lines() {
-        assert!(
-            inventory::iter::<engine_backend::subsystems::render::EditorLinesRegistration>
-                .into_iter()
-                .any(|registration| registration.name == "splines")
-        );
     }
 }

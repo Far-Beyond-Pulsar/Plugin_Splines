@@ -1,7 +1,7 @@
 //! Scene spline browser, point inspector, curve configuration and authoring tools.
 use super::splines;
 use super::state::{
-    CurveAlgorithm, CurveAlgorithmText, DrawingPlane, SplineData, SplineDomain, SplinePoint,
+    CurveAlgorithm, CurveAlgorithmText, DrawingPlane, SplineData, SplineDomain,
     SplineStateExt as _, SplineTool,
 };
 use gpui::*;

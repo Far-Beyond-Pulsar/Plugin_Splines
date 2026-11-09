@@ -20,10 +20,21 @@ draw phases and api crates.
 | Crate | Path | What |
 |---|---|---|
 | `splines_component` | `component/` | Splines (pulsar.splines): the spline component, its script methods and the editor lines it draws through the renderer's debug draw |
-| `splines_plugin` | `editor/` | Splines (pulsar.splines): the editor plugin -- its metadata, over the plugin's component crate |
+| `splines_plugin` | `.` | Splines (`pulsar.splines`): the plugin's root crate, the one place it registers everything it contributes (runtime registrations always, the editor's with `editor`) |
+| `splines_editor` | `editor/` | Splines (pulsar.splines): the editor crate -- the Spline tool mode, its panel and the assistant's spline tools, over the plugin's component crate |
 
-- **Runtime module** (what a game built for a project links): `splines_component`.
-- **Editor module** (what the editor links in addition): `splines_plugin`.
+The root crate (`splines_plugin`, this directory's package) is the one place
+the plugin registers what it contributes: its component classes, every
+registration that names an origin (`pulsar_plugins::origin!()`) and the
+descriptor. The other crates hold the code and register nothing but their
+types' own attachments, so `src/runtime.rs` (and `src/editor.rs`, with
+the `editor` feature) lists everything the plugin brings. The plugin's
+integration tests (`tests/`) and the editor crate's unit tests link the
+root (without `editor`), as a game does.
+
+- **Runtime module** (what a game built for a project links): `splines_plugin`.
+- **Editor module** (what the editor links in addition): `splines_plugin` with its
+  `editor` feature (`splines_editor`).
 - **Requires**: nothing. A project enables or disables the plugin in its
   `Pulsar.toml` (`[plugins]`); disabled, the kind is absent and the frame
   draws without it.
@@ -41,8 +52,8 @@ only inside a Pulsar-Native checkout:
 ```bash
 git clone --recursive https://github.com/Far-Beyond-Pulsar/Pulsar-Native
 cd Pulsar-Native
-cargo check -p splines_component -p splines_plugin --tests
-cargo test -p splines_component
+cargo check -p splines_plugin -p splines_component -p splines_editor --features splines_plugin/editor --tests
+cargo test -p splines_plugin -p splines_component
 ```
 
 Suites that render real frames need a GPU; CI leaves them out by name
