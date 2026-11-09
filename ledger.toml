@@ -1,0 +1,61 @@
+# The splines plugin's rows of the SceneDB closure ledger (Pulsar-Native#1035):
+# its classes, GPU schemas, buffers, pass crates and call sites. A plugin owns
+# the rows of what it ships (Pulsar-Native#1606); `cargo test -p scene_inventory`
+# in a Pulsar-Native checkout recomputes every fact column, checks the human
+# columns, and fails on a missing, stale or misplaced row. The columns are
+# described in Pulsar-Native's crates/core/scene_inventory/ledger.toml.
+
+# ── Exposed component classes ───────────────────────────────────
+
+[[class]]
+name = "SplineComponent"
+category = "Gameplay"
+world_registered = true
+own_gpu_columns = false
+owner = "splines_component::component"
+disposition = "editor visualization, Phase 4: SplineLines reads SceneDB's change journal and rebuilds the debug lines only when a spline, or its owner's transform, visibility, selection or enabled state, changes; nothing scans the World on a sync without such a change"
+target_contract = "Phase 4; 03-gpu-reflection-and-rendering.md"
+test = "plugins/vendor/splines/component/src/component.rs (spline_lines_rebuild_only_when_a_spline_or_its_owner_changes)"
+status = "verified"
+
+# ── Lifecycle call sites ────────────────────────────────────────
+
+[[site]]
+pattern = "add-component"
+file = "plugins/vendor/splines/editor/src/level_editor/splines.rs"
+count = 1
+owner = "plugins/vendor/splines/editor/src/level_editor/splines.rs"
+disposition = "keep: the kind's own, moved with it into its plugin (plugin-migration.md Phases B and C)"
+target_contract = "Phase C; plugin-migration.md"
+test = "none: no test names this row; the owning plugin's suites cover its behaviour"
+status = "unverified"
+
+[[site]]
+pattern = "change-cursor"
+file = "plugins/vendor/splines/component/src/component.rs"
+count = 6
+owner = "plugins/vendor/splines/component/src/component.rs"
+disposition = "keep: the kind's own, moved with it into its plugin (plugin-migration.md Phases B and C)"
+target_contract = "Phase C; plugin-migration.md"
+test = "none: no test names this row; the owning plugin's suites cover its behaviour"
+status = "unverified"
+
+[[site]]
+pattern = "change-cursor"
+file = "plugins/vendor/splines/editor/src/level_editor/splines.rs"
+count = 8
+owner = "plugins/vendor/splines/editor/src/level_editor/splines.rs"
+disposition = "keep: the kind's own, moved with it into its plugin (plugin-migration.md Phases B and C)"
+target_contract = "Phase C; plugin-migration.md"
+test = "none: no test names this row; the owning plugin's suites cover its behaviour"
+status = "unverified"
+
+[[site]]
+pattern = "property-edit"
+file = "plugins/vendor/splines/editor/src/level_editor/splines.rs"
+count = 1
+owner = "plugins/vendor/splines/editor/src/level_editor/splines.rs"
+disposition = "keep: the kind's own, moved with it into its plugin (plugin-migration.md Phases B and C)"
+target_contract = "Phase C; plugin-migration.md"
+test = "none: no test names this row; the owning plugin's suites cover its behaviour"
+status = "unverified"
