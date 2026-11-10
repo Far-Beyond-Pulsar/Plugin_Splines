@@ -11,8 +11,7 @@ name = "splines_component"
 
 [dependencies]
 engine_class_derive = { workspace = true }
-pulsar_reflection = { workspace = true, features = ["prims-gpui"] }
-gpui-ce = { workspace = true }
+pulsar_reflection = { workspace = true }
 pulsar_scenedb = { workspace = true }
 pulsar_world_registry = { workspace = true }
 pulsar_scene_model = { workspace = true }
