@@ -28,8 +28,10 @@ mod tests {
 
     #[test]
     fn registers_its_editor_lines() {
-        assert!(pulsar_plugins::registered::<EditorLinesRegistration>()
-            .any(|registration| registration.name == "splines"));
+        assert!(
+            pulsar_plugins::registered::<EditorLinesRegistration>()
+                .any(|registration| registration.name == "splines")
+        );
     }
 
     /// Every registration of the plugin names this root, so it resolves to
@@ -40,9 +42,10 @@ mod tests {
             .into_iter()
             .filter(|summary| summary.origin == pulsar_plugins::origin!())
             .collect();
-        assert!(ours
-            .iter()
-            .any(|summary| summary.category == "component.class"));
+        assert!(
+            ours.iter()
+                .any(|summary| summary.category == "component.class")
+        );
         for summary in &ours {
             assert_eq!(
                 pulsar_plugins::plugin_of(summary.origin).map(|plugin| plugin.id.as_str()),
