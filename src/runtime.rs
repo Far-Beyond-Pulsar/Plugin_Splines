@@ -1,22 +1,25 @@
 //! What the splines plugin registers for a game (and the editor): every
 //! runtime contribution, grouped by the engine seam it plugs into.
 
+use engine_backend::scene::{ClassSpec, ComponentsBuilder};
 use engine_backend::subsystems::render::EditorLinesRegistration;
 use splines_component::SplineComponent;
 
-// ── Component classes ───────────────────────────────────────────────────────
+/// Everything the splines plugin registers for a game.
+pub(crate) fn build(p: &mut pulsar_plugins::PluginBuilder) {
+    // ── Component classes ───────────────────────────────────────────────────
 
-pulsar_world_registry::submit_world_component!(SplineComponent);
+    p.components()
+        .class::<SplineComponent>(ClassSpec::default());
 
-// ── Rendering ───────────────────────────────────────────────────────────────
+    // ── Rendering ───────────────────────────────────────────────────────────
 
-// Every visible curve in the renderer's editor debug lines.
-inventory::submit! {
-    EditorLinesRegistration {
-        origin: pulsar_plugins::origin!(),
+    // Every visible curve in the renderer's editor debug lines.
+    p.add(EditorLinesRegistration {
+        origin: p.origin(),
         name: "splines",
         new: splines_component::new_spline_lines,
-    }
+    });
 }
 
 #[cfg(test)]
