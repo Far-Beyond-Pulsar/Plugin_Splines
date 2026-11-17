@@ -20,12 +20,12 @@ pub fn view_projection(camera: CameraFrame, viewport: ViewportFrame) -> Mat4 {
     } else {
         Vec3::Y
     };
-    Mat4::perspective_rh(
+    glam::camera::rh::proj::directx::perspective(
         std::f32::consts::FRAC_PI_4,
         viewport.width / viewport.height.max(1.),
         0.1,
         10000.,
-    ) * Mat4::look_at_rh(position, position + direction, up)
+    ) * glam::camera::rh::view::look_at_mat4(position, position + direction, up)
 }
 pub fn project(camera: CameraFrame, viewport: ViewportFrame, point: [f32; 3]) -> Option<[f32; 2]> {
     let clip = view_projection(camera, viewport) * Vec3::from(point).extend(1.);
